@@ -10,7 +10,7 @@ exports.SubscriptionMan = backbone.Model.extend4000({
     subscribe: function (pattern,callback,name) {
         if (!name) { name = Math.random() } // need something else here, callback can be reused for different patterns... 
         if (this.patterns[name]) { throw "subscription with name " + name + " already exists" }
-        this.patterns[name] = [ Validator(pattern), callback ]
+        this.patterns[name] = { validator: Validator(pattern), callback: callback }
         return name
     },
     
@@ -27,7 +27,7 @@ exports.SubscriptionMan = backbone.Model.extend4000({
     },
     
     msg: function (msg,callback) {
-        var args = _.flatten(_.values(this.patterns))
+        var args = _.flatten(_.map(_.values(this.patterns), function (matcher) { return [ matcher.validator, matcher.callback] }))
         args.unshift(msg)
         Select.apply(this, args)
     }
