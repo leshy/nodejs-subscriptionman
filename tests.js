@@ -23,10 +23,30 @@ exports.basic = function (test) {
     
     x.subscribe({bla: "Number"},function (msg,next) { 
         bla.push('number')
-        test.equals(JSON.stringify(bla),'[{"bla":3},"number"]')
+        test.deepEqual(bla,[{"bla":3},"number"])
         test.done()
     })    
     
     x.msg({bla: 3})
     
 }
+
+
+
+exports.oneshot = function (test) {
+
+    var x = new subscriptionman.SubscriptionMan()
+    var bla = []
+    
+    x.oneshot({bla: true},function (msg,next) { 
+        bla.push(msg)
+    })
+    
+    x.msg({bla: 3})
+    x.msg({bla: 3})
+
+    test.deepEqual(bla,[{"bla": 3}])
+    test.done()
+    
+}
+
