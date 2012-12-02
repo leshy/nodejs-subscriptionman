@@ -1,8 +1,9 @@
 
 var backbone = require("backbone4000")
 var _ = require('underscore')
-var v = require('validator'); var Validator = v.Validator; var Select = v.Select
+var v = require('validator2-extras'); var Validator = v.v; var Select = v.Select
 
+var helpers = require('helpers')
 
 // I shouldn't insist on every subscription having a name, most of them don't care about it.. fix that.
 exports.SubscriptionMan = backbone.Model.extend4000({
