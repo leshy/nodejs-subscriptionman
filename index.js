@@ -5,8 +5,17 @@ var v = require('validator2-extras'); var Validator = v.v; var Select = v.Select
 
 var helpers = require('helpers')
 
-// I shouldn't insist on every subscription having a name, most of them don't care about it.. fix that.
 exports.SubscriptionMan = backbone.Model.extend4000({
+    // oneshot: f(patterns, callback, name) ->
+    //    ff = (args...) => @unsubscribe name ; callback.apply @, args
+    //    name = @subscribe pattern, ff, name
+    //    -> @unsubscribe name
+    
+    // msg: (msg) ->
+    //    args = _.flatten _.map _.values @patterns, (matcher) -> [matcher.validator, matcher.callback]
+    //    args = _.flatten ([m.validator, m.callback] for m in _.values @patterns)
+
+
     initialize: function () {
         this.patterns = {}
     },
@@ -37,17 +46,8 @@ exports.SubscriptionMan = backbone.Model.extend4000({
         var unsub = undefined
         function ff() { unsub(); callback.apply(this,arguments); }
         unsub = this.subscribe(pattern, ff, name );
-        return function() { self.unsubscribe(name); };
+        return unsub;
     },
-
-    // oneshot: f(patterns, callback, name) ->
-    //    ff = (args...) => @unsubscribe name ; callback.apply @, args
-    //    name = @subscribe pattern, ff, name
-    //    -> @unsubscribe name
-    
-    // msg: (msg) ->
-    //    args = _.flatten _.map _.values @patterns, (matcher) -> [matcher.validator, matcher.callback]
-    //    args = _.flatten ([m.validator, m.callback] for m in _.values @patterns)
 
     msg: function (msg,wrap) {
         this.trigger('msg',msg)
